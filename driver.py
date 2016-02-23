@@ -23,8 +23,10 @@ class Driver:
         @type speed: int
         @rtype: None
         """
-        # TODO
-        pass
+        self.id = identifier
+        self.location = location
+        self.speed = speed
+        self.is_idle = True
 
     def __str__(self):
         """Return a string representation.
@@ -32,8 +34,11 @@ class Driver:
         @type self: Driver
         @rtype: str
         """
-        # TODO
-        pass
+        return "{}, Location: ({}), Speed: {}, is_idle: {}"\
+            .format(self.id,
+                    str(self.location),
+                    str(self.speed),
+                    str(self.is_idle))
 
     def __eq__(self, other):
         """Return True if self equals other, and false otherwise.
@@ -41,8 +46,8 @@ class Driver:
         @type self: Driver
         @rtype: bool
         """
-        # TODO
-        pass
+        return type(self), self.id, self.location, self.speed, self.is_idle == \
+               type(other), other.id, other.location, other.speed, other.is_idle
 
     def get_travel_time(self, destination):
         """Return the time it will take to arrive at the destination,
@@ -52,8 +57,7 @@ class Driver:
         @type destination: Location
         @rtype: int
         """
-        # TODO
-        pass
+        return int(manhattan_distance(self.location, destination)/self.speed)
 
     def start_drive(self, location):
         """Start driving to the location and return the time the drive will take.
@@ -62,7 +66,11 @@ class Driver:
         @type location: Location
         @rtype: int
         """
-        # TODO
+        # Use self.speed to model passage of time as driving
+        travel_time = get_travel_time(self, location)
+
+        #
+
         pass
 
     def end_drive(self):
@@ -83,7 +91,7 @@ class Driver:
         @type rider: Rider
         @rtype: int
         """
-        # TODO
+        # Learns identity of the Rider and destination, use get_travel_time
         pass
 
     def end_ride(self):
