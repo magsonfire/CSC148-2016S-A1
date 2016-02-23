@@ -21,12 +21,16 @@ class Driver:
         @type identifier: str
         @type location: Location
         @type speed: int
+        @type destination: Location
+        @type passenger: str
         @rtype: None
         """
         self.id = identifier
         self.location = location
         self.speed = speed
         self.is_idle = True
+        self.destination = ''
+        self._passenger = ''
 
     def __str__(self):
         """Return a string representation.
@@ -34,11 +38,10 @@ class Driver:
         @type self: Driver
         @rtype: str
         """
-        return "{}, Location: ({}), Speed: {}, is_idle: {}"\
+        return "{} {} {}"\
             .format(self.id,
                     str(self.location),
-                    str(self.speed),
-                    str(self.is_idle))
+                    str(self.speed))
 
     def __eq__(self, other):
         """Return True if self equals other, and false otherwise.
@@ -57,7 +60,7 @@ class Driver:
         @type destination: Location
         @rtype: int
         """
-        return int(manhattan_distance(self.location, destination)/self.speed)
+        return manhattan_distance(self.location, destination) // self.speed
 
     def start_drive(self, location):
         """Start driving to the location and return the time the drive will take.
@@ -66,13 +69,9 @@ class Driver:
         @type location: Location
         @rtype: int
         """
-        # Use self.speed to model passage of time as driving
-        travel_time = get_travel_time(self, location)
-
-        #
-
-        pass
-
+        self.destination = location
+        return get_travel_time(self, location)
+        
     def end_drive(self):
         """End the drive and arrive at the destination.
 
@@ -81,8 +80,8 @@ class Driver:
         @type self: Driver
         @rtype: None
         """
-        # TODO
-        pass
+        # Set self's location to self.destination at end of drive
+        self.location = self.destination
 
     def start_ride(self, rider):
         """Start a ride and return the time the ride will take.
@@ -91,7 +90,8 @@ class Driver:
         @type rider: Rider
         @rtype: int
         """
-        # Learns identity of the Rider and destination, use get_travel_time
+        # Learns identity of the rider and destination
+        # Returns travel_time to rider's desination
         pass
 
     def end_ride(self):
@@ -103,5 +103,5 @@ class Driver:
         @type self: Driver
         @rtype: None
         """
-        # TODO
+        # Set driver location to rider destination
         pass
