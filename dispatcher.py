@@ -54,6 +54,8 @@ class Dispatcher:
         else:
             # Add rider to waitlist
             self._waitlist.add(rider)
+        # Is there a way to get a driver who's also closer, not just faster?
+        # Fleet is now sorted in order of driver speed
 
     def request_rider(self, driver):
         """Return a rider for the driver, or None if no rider is available.
@@ -68,11 +70,13 @@ class Dispatcher:
         if driver not in self._fleet:
             self._fleet.add(driver)
             
-        # Check waitlist for waiting rider
+        # Check waitlist for longest-waiting rider
         if rider in self._waitlist:
             return rider
         else:
             return None
+        # Is there a way to get longest-waiting rider?
+        # Waitlist currently sorted by patience
 
     def cancel_ride(self, rider):
         """Cancel the ride for rider.
@@ -81,4 +85,5 @@ class Dispatcher:
         @type rider: Rider
         @rtype: None
         """
-        rider.status = CANCELLED
+        rider._set_status(CANCELLED)
+        self._waitlist.remove()

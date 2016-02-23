@@ -48,7 +48,7 @@ class Rider:
         self.origin = origin
         self.destination = destination
         self.patience = patience
-        self.status = WAITING
+        self._status = WAITING
 
     def __str__(self):
         """Return a string representation.
@@ -56,12 +56,11 @@ class Rider:
         @type self: Rider
         @rtype: str
         """
-        return '{}, O: ({}), D: ({}), {}, {}'\
+        return '{} {} {} {}'\
             .format(self.id,
                     str(self.origin),
                     str(self.destination),
-                    str(self.patience),
-                    self.status)
+                    str(self.patience))
 
     def __eq__(self, other):
         """Return True if self equals other, and False otherwise.
@@ -112,3 +111,12 @@ class Rider:
         @rtype: bool
         """
         return self.patience >= other.patience
+    
+    def _set_status(self, status):
+        """Change the status of self to status.
+         
+        @type self: Rider
+        @type status: str
+        @rtype: None
+        """
+        self._status = status
