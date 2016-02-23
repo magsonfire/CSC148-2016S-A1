@@ -22,10 +22,12 @@ class Dispatcher:
         """Initialize a Dispatcher.
 
         @type self: Dispatcher
+        @type _waitlist: PriorityQueue of Rider
+        @type _fleet: PriorityQueue of Driver
         @rtype: None
         """
-        # TODO
-        pass
+        self._waitlist = PriorityQueue()
+        self._fleet = PriorityQueue()
 
     def __str__(self):
         """Return a string representation.
@@ -33,9 +35,8 @@ class Dispatcher:
         @type self: Dispatcher
         @rtype: str
         """
-        # TODO
-        pass
-
+        return '{} {}'.format(str(self._waitlist), str(self._fleet))
+    
     def request_driver(self, rider):
         """Return a driver for the rider, or None if no driver is available.
 
@@ -45,8 +46,14 @@ class Dispatcher:
         @type rider: Rider
         @rtype: Driver | None
         """
-        # TODO
-        pass
+        # Check fleet for idle driver
+        for driver in _fleet:
+            if driver.is_idle:
+                # Return first idle driver
+                return driver
+        else:
+            # Add rider to waitlist
+            self._waitlist.add(rider)
 
     def request_rider(self, driver):
         """Return a rider for the driver, or None if no rider is available.
@@ -57,8 +64,15 @@ class Dispatcher:
         @type driver: Driver
         @rtype: Rider | None
         """
-        # TODO
-        pass
+        # Add driver to fleet if new
+        if driver not in self._fleet:
+            self._fleet.add(driver)
+            
+        # Check waitlist for waiting rider
+        if rider in self._waitlist:
+            return rider
+        else:
+            return None
 
     def cancel_ride(self, rider):
         """Cancel the ride for rider.
@@ -67,5 +81,4 @@ class Dispatcher:
         @type rider: Rider
         @rtype: None
         """
-        # TODO
-        pass
+        rider.status = CANCELLED

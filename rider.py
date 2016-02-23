@@ -112,12 +112,3 @@ class Rider:
         @rtype: bool
         """
         return self.patience >= other.patience
-        
-def get_rider_by_id(identifier):
-    """Return a rider that has the same id as identifier.
-
-    @type identifier: str
-    @rtype: Rider
-    """
-
-    pass
