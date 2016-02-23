@@ -45,7 +45,9 @@ class Dispatcher:
         @type rider: Rider
         @rtype: Driver | None
         """
-        # TODO
+        # If an idle driver is available
+        # Assign a driver to pick up rider
+        # Otherwise, add rider to waiting list
         pass
 
     def request_rider(self, driver):
@@ -57,7 +59,6 @@ class Dispatcher:
         @type driver: Driver
         @rtype: Rider | None
         """
-        # TODO
         pass
 
     def cancel_ride(self, rider):
