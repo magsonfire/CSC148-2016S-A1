@@ -263,13 +263,19 @@ class DriverRequest(Event):
         @rtype: list[Event]
         """
         # Notify the monitor about the request.
+        monitor.notify(self.timestamp, DRIVER, REQUEST, self.driver, \
+                       self.driver.location)
 
+        events = []
         # Request a rider from the dispatcher.
+        rider = dispatcher.request_rider(self.driver)
         # If there is one available, the driver starts driving towards the
         # rider, and the method returns a Pickup event for when the driver
         # arrives at the riders location.
-        # TODO
-        pass
+        if rider is not None:
+            travel_time = driver.start_drive(rider.origin)
+            events.append(Pickup(self.timestamp + travel_time, rider, self.driver))
+        return events
 
     def __str__(self):
         """Return a string representation of this event.
@@ -281,18 +287,101 @@ class DriverRequest(Event):
 
 
 class Cancellation(Event):
-    # TODO
-    pass
-
+    """A rider cancels a request.
+    
+    === Attributes ===
+    @type rider: Rider.
+        The rider.
+    """
+    
+    def __init__(self, timestamp, rider):
+        """Initialize a Cancellation event.
+        
+        @type self: Cancellation
+        @type rider: Rider
+        @rtype: None
+        """
+        pass
+    
+    def do(self, dispatcher, monitor):
+        """Cancel a rider's request, change the rider's status to CANCELLED,
+        and remove the rider from the dispatcher's waitlist.
+        
+        Return an empty event list.
+        
+        @type self: Cancellation
+        @type dispatcher: Dispatcher
+        @type monitor: Monitor
+        @rtype: list[Event]
+        """
+        pass
+    
 
 class Pickup(Event):
-    # TODO
-    pass
+    # Use Driver.start_drive(Rider.origin) to start pickup event
+    # If driver's travel_time <= rider.patience, pick up success
+    # Otherwise, Rider cancels
+    """A driver successfully picks up a rider.
+    
+    === Attributes ===
+    @type rider: Rider
+    @type driver: Driver
+    @rtype: None
+    """
+    
+    def __init__(self, timestamp, rider, driver):
+        """Initialize a Pickup event.
+        
+        @type self: Pickup
+        @type rider: Rider
+        @type driver: Driver
+        @rtype: None
+        """
+        pass
 
+    def do(self, dispatcher, monitor):
+        """Change the rider's status to SATISFIED, and the driver starts
+        driving to the rider's destination.
+        
+        Return a Dropoff event.
+        
+        @type self: Pickup
+        @type dispatcher: Dispatcher
+        @type monitor: Monitor
+        @rtype: list[Event]
+        """
+        pass
 
 class Dropoff(Event):
-    # TODO
-    pass
+    """A driver drops off a rider at their destination.
+    
+    === Attributes ===
+    @type rider: Rider
+    @type driver: Driver
+    @rtype: None
+    """
+    
+    def __init__(self, timestamp, rider, driver):
+        """Initialize a Dropoff event.
+        
+        @type self: Dropoff
+        @type rider: Rider
+        @type driver: Driver
+        @rtype: None
+        """
+        pass
+
+    def do(self, dispatcher, monitor):
+        """Change the driver's status to idle.
+        
+        Return an empty event list.
+        
+        @type self: Dropoff
+        @type dispatcher: Dispatcher
+        @type monitor: Monitor
+        @rtype: list[Event]
+        """
+        pass
 
 
 def create_event_list(filename):

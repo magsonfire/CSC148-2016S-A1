@@ -49,11 +49,10 @@ class Dispatcher:
         # Check fleet for idle driver
         for driver in _fleet:
             if driver.is_idle:
-                # Return first idle driver
                 return driver
         else:
-            # Add rider to waitlist
             self._waitlist.add(rider)
+            return None
         # Is there a way to get a driver who's also closer, not just faster?
         # Fleet is now sorted in order of driver speed
 
