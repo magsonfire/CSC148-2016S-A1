@@ -1,3 +1,7 @@
+from location import Location
+from driver import Driver
+from rider import Rider
+
 """
 The Monitor module contains the Monitor class, the Activity class,
 and a collection of constants. Together the elements of the module
@@ -100,7 +104,7 @@ class Monitor:
             The time of the activity.
         @type category: DRIVER | RIDER
             The category for the activity.
-        @type description: REQUEST | CANCEL | PICKUP | DROP_OFF
+        @type description: REQUEST | CANCEL | PICKUP | DROPOFF
             A description of the activity.
         @type identifier: str
             The identifier for the actor.
@@ -149,14 +153,107 @@ class Monitor:
         @type self: Monitor
         @rtype: float
         """
-        # TODO
-        pass
-
+        total_dist = 0
+        count = 0
+ 
+        for driver in self.activities[DRIVER]:
+            #Find each driver's total distance 
+           total_dist += get_riderless_distance(driver) + \
+                get_ride_distance(driver)
+           count += 1
+        #Add them up and divide by nummber of drivers
+        return total_dist / count
+        
     def _average_ride_distance(self):
         """Return the average distance drivers have driven on rides.
 
         @type self: Monitor
         @rtype: float
         """
-        # TODO
-        pass
+        total_dist = 0
+        count = 0
+        
+        for driver in self.activities[DRIVER]:
+            total_dist += get_ride_distance(driver)
+            
+            count += 1
+        
+        return total_dist / count
+
+    def get_riderless_distance(self, driver):
+        """Return the total distance travelled without a rider by driver.
+        
+        @type self: Monitor
+        @type driver: str
+        @rtype: int
+        """
+        total_dist = 0
+        
+        # Scan through activities list of given driver
+        for i in range(len(self._activities[DRIVER][driver]) - 1):
+            current = self._activities[DRIVER][driver][i]
+            next = self._activities[DRIVER][driver][i + 1]
+            # If activity is REQUEST
+            if REQUEST in current.description:
+                # Add distance between activity and next activity to total
+                dist = manhattan_distance(current.location, next.location)
+                total_dist += dist
+                
+        # Return total riderless distance
+        return total_dist
+        
+        
+        #This can be more efficient
+    def get_ride_distance(self, driver):
+        """Return the total distance travelled with a rider by driver.
+        
+        @type self: Monitor
+        @type driver: str
+        @rtype: int
+        """
+        total_dist = 0
+                
+        # Scan through activities list of given driver
+        for i in range(len(self._activities[DRIVER][driver]) - 1):
+            current = self._activities[DRIVER][driver][i]
+            next = self._activities[DRIVER][driver][i + 1]
+            # If activity is PICKUP followed by DROPOFF
+            if PICKUP in current.description and DROPOFF in next.description:
+            # Add distance between activity and next activity to total
+                dist = manhattan_distance(current.location, next.location)
+                total_dist += dist
+                        
+        # Return total distance with rider
+        return total_dist  
+              
+#Get ridda dis!        
+def manhattan_distance(origin, destination):
+    """Return the Manhattan distance between the origin and the destination.
+
+    @type origin: Location
+    @type destination: Location
+    @rtype: int
+
+    >>> manhattan_distance(Location(0,0), Location(3,4))
+    7
+    >>> manhattan_distance(Location(3,4), Location(0,0))
+    7
+    >>> manhattan_distance(Location(3,4), Location(3,4))
+    0
+    """
+    return abs(destination.row - origin.row) + \
+           abs(destination.column - origin.column)     
+        
+if __name__ == '__main__':
+    m = Monitor()
+    m.notify(1, DRIVER, REQUEST, 'a', Location(0,0))
+    m.notify(2, DRIVER, PICKUP, 'a', Location(1,1))
+    print(m.get_riderless_distance('a'))
+    m.notify(3, DRIVER, DROPOFF, 'a', Location(2,2))
+    print(m.get_riderless_distance('a'))
+    m.notify(4, DRIVER, REQUEST, 'a', Location(2,2))
+    m.notify(4, DRIVER, PICKUP, 'a', Location(3,6))
+    print(m.get_riderless_distance('a'))
+    
+    
+#!!!WE MAY HAVE TO CHANGE PICKUP IN EVENT, IF RIDER CANCELS IS PICKUP STILL COUNTED??
