@@ -143,4 +143,4 @@ class Driver:
         @rtype: None
         """
         # Set driver location to rider destination
-        Driver.location = Rider.destination 
+        Driver.location = Rider.destination

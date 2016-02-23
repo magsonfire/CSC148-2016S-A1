@@ -1,3 +1,4 @@
+
 class Location:
     def __init__(self, row, column):
         """Initialize a location.
