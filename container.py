@@ -118,4 +118,4 @@ class PriorityQueue(Container):
         ['blue', 'green', 'red', 'yellow']
         """
         self._items.append(item)
-        self._items.sort()
+        self._items.sort() # might not  be sort...
