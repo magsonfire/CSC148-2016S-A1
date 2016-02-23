@@ -17,5 +17,69 @@ SATISFIED = "satisfied"
 
 
 class Rider:
-    # TODO
+    """A rider for a ride-sharing service.
+
+    === Attributes ===
+    @type id: str
+        A unique identifier for the rider.
+    @type origin: Location
+        The rider's pick-up location.
+    @type destination: Location
+        The rider's drop-off location.
+    @type patience: int
+        The number of minutes the rider is willing to wait
+        before cancelling their ride request.
+    @type status: str
+        The rider's status, which may be WAITING, CANCELLED, or
+        SATISFIED.
+    """
+
+    def __init__(self, identifier, origin, destination, patience):
+        """Initialize a Rider.
+
+        @type self: Rider
+        @type identifier: str
+        @type origin: Location
+        @type destination: Location
+        @type patience: int
+        @rtype: None
+        """
+        self.id = identifier
+        self.origin = origin
+        self.destination = destination
+        self.patience = patience
+        self.status = WAITING
+
+    def __str__(self):
+        """Return a string representation.
+
+        @type self: Rider
+        @rtype: str
+        """
+        return '{}, O: ({}), D: ({}), {}, {}'\
+            .format(self.id,
+                    str(self.origin),
+                    str(self.destination),
+                    str(self.patience),
+                    self.status)
+
+    def __eq__(self, other):
+        """Return True if self equals other, and False otherwise.
+
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """
+        return type(self), self.id, self.origin, \
+               self.destination, self.patience, self.status == \
+               type(other), other.id, other.origin, \
+               other.destination, other.patience, other.status
+
+def get_rider_by_id(identifier):
+    """Return a rider that has the same id as identifier.
+
+    @type identifier: str
+    @rtype: Rider
+    """
+
     pass
