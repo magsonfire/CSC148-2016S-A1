@@ -74,7 +74,45 @@ class Rider:
                self.destination, self.patience, self.status == \
                type(other), other.id, other.origin, \
                other.destination, other.patience, other.status
+    
+    def __lt__(self, other):
+        """Return True if self is less than other, and False otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """        
+        return self.patience < other.patience
+        
+    def __le__(self, other):
+        """Return True if self is less than or equal to other, and False 
+        otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """        
+        return self.patience <= other.patience
 
+    def __gt__(self, other):
+        """Return True if self is greater than other, and False otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """        
+        return self.patience > other.patience
+
+    def __ge__(self, other):
+        """Return True if self is greater than or equal to other, and False 
+        otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """
+        return self.patience >= other.patience
+        
 def get_rider_by_id(identifier):
     """Return a rider that has the same id as identifier.
 

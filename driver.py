@@ -52,6 +52,44 @@ class Driver:
         return type(self), self.id, self.location, self.speed, self.is_idle == \
                type(other), other.id, other.location, other.speed, other.is_idle
 
+    def __lt__(self, other):
+        """Return True if self is less than other, and False otherwise.
+        
+        @type self: Driver
+        @type other: Driver
+        @rtype: bool
+        """        
+        return self.speed < other.speed
+        
+    def __le__(self, other):
+        """Return True if self is less than or equal to other, and False 
+        otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """        
+        return self.speed <= other.speed
+
+    def __gt__(self, other):
+        """Return True if self is greater than other, and False otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """        
+        return self.speed > other.speed
+
+    def __ge__(self, other):
+        """Return True if self is greater than or equal to other, and False 
+        otherwise.
+        
+        @type self: Rider
+        @type other: Rider
+        @rtype: bool
+        """
+        return self.speed >= other.speed
+    
     def get_travel_time(self, destination):
         """Return the time it will take to arrive at the destination,
         rounded to the nearest integer.
@@ -91,9 +129,10 @@ class Driver:
         @rtype: int
         """
         # Learns identity of the rider and destination
+        self._passenger = rider.id
         # Returns travel_time to rider's desination
-        pass
-
+        return get_travel_time(rider.destination)
+        
     def end_ride(self):
         """End the current ride, and arrive at the rider's destination.
 
@@ -104,4 +143,4 @@ class Driver:
         @rtype: None
         """
         # Set driver location to rider destination
-        pass
+        Driver.location = Rider.destination 
