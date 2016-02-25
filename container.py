@@ -173,9 +173,10 @@ class Queue(Container):
         """
         self._items.append(obj)
 
-    def remove(self):
+    def remove(self, i = None):
         """
-        Remove and return front object from Queue self.
+        Remove and return object at index i. If no index is provided, remove
+        and return the first object.
 
         Queue self must not be empty.
 
@@ -188,6 +189,10 @@ class Queue(Container):
         >>> q.remove()
         3
         """
+        if i != None:
+            item = self._items[i]
+            self._items.remove(self._items[i])
+            return item
         return self._items.pop(0)
 
     def is_empty(self):
