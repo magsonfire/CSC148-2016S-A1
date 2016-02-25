@@ -173,7 +173,7 @@ class Queue(Container):
         """
         self._items.append(obj)
 
-    def remove(self, i = None):
+    def remove(self, i=None):
         """
         Remove and return object at index i. If no index is provided, remove
         and return the first object.
