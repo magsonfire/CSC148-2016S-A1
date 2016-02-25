@@ -101,13 +101,13 @@ class Driver:
         return round(manhattan_distance(self.location, destination) / self.speed)
 
     def start_drive(self, location):
-        """Start driving to the location and return the time the drive will take.
+        """Start driving to the location and return the time the drive will
+        take.
 
         @type self: Driver
         @type location: Location
         @rtype: int
         """
-        self.is_idle = False
         self.destination = location
         return get_travel_time(self, location)
 
