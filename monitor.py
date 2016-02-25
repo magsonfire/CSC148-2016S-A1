@@ -148,7 +148,7 @@ class Monitor:
         return wait_time / count
 
     def _average_total_distance(self):
-        
+
         """Return the average distance drivers have driven.
 
         @type self: Monitor
@@ -156,15 +156,15 @@ class Monitor:
         """
         total_dist = 0
         count = 0
- 
-        for driver in self.activities[DRIVER]:
-            #Find each driver's total distance 
+
+        for driver in self._activities[DRIVER]:
+            #Find each driver's total distance
            total_dist += get_riderless_distance(driver) + \
                 get_ride_distance(driver)
            count += 1
         #Add them up and divide by nummber of drivers
         return total_dist / count
-        
+
     def _average_ride_distance(self):
         """Return the average distance drivers have driven on rides.
 
@@ -173,23 +173,23 @@ class Monitor:
         """
         total_dist = 0
         count = 0
-        
-        for driver in self.activities[DRIVER]:
+
+        for driver in self._activities[DRIVER]:
             total_dist += get_ride_distance(driver)
-            
+
             count += 1
-        
+
         return total_dist / count
 
     def get_riderless_distance(self, driver):
         """Return the total distance travelled without a rider by driver.
-        
+
         @type self: Monitor
         @type driver: str
         @rtype: int
         """
         total_dist = 0
-        
+
         # Scan through activities list of given driver
         for i in range(len(self._activities[DRIVER][driver]) - 1):
             current = self._activities[DRIVER][driver][i]
@@ -199,21 +199,21 @@ class Monitor:
                 # Add distance between activity and next activity to total
                 dist = manhattan_distance(current.location, next.location)
                 total_dist += dist
-                
+
         # Return total riderless distance
         return total_dist
-        
-        
+
+
         #This can be more efficient
     def get_ride_distance(self, driver):
         """Return the total distance travelled with a rider by driver.
-        
+
         @type self: Monitor
         @type driver: str
         @rtype: int
         """
         total_dist = 0
-                
+
         # Scan through activities list of given driver
         for i in range(len(self._activities[DRIVER][driver]) - 1):
             current = self._activities[DRIVER][driver][i]
@@ -223,11 +223,11 @@ class Monitor:
             # Add distance between activity and next activity to total
                 dist = manhattan_distance(current.location, next.location)
                 total_dist += dist
-                        
+
         # Return total distance with rider
-        return total_dist  
-              
-#Get ridda dis!        
+        return total_dist
+
+#Get ridda dis!
 def manhattan_distance(origin, destination):
     """Return the Manhattan distance between the origin and the destination.
 
@@ -243,8 +243,8 @@ def manhattan_distance(origin, destination):
     0
     """
     return abs(destination.row - origin.row) + \
-           abs(destination.column - origin.column)     
-        
+           abs(destination.column - origin.column)
+
 if __name__ == '__main__':
     m = Monitor()
     m.notify(1, DRIVER, REQUEST, 'a', Location(0,0))
@@ -255,6 +255,6 @@ if __name__ == '__main__':
     m.notify(4, DRIVER, REQUEST, 'a', Location(2,2))
     m.notify(4, DRIVER, PICKUP, 'a', Location(3,6))
     print(m.get_riderless_distance('a'))
-    
-    
+
+
 #!!!WE MAY HAVE TO CHANGE PICKUP IN EVENT, IF RIDER CANCELS IS PICKUP STILL COUNTED??
