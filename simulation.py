@@ -51,8 +51,11 @@ class Simulation:
         @rtype: dict[str, object]
         """
         # Add all initial events to the event queue.
+        print(initial_events)
         for item in initial_events:
+            print(item)
             self._events.add(item)
+            print(self._events)
         # Until there are no more events, remove an event
         # from the event queue and do it. Add any returned
         # events to the event queue.
@@ -70,6 +73,9 @@ class Simulation:
 
 if __name__ == "__main__":
     events = create_event_list("events.txt")
+    q = PriorityQueue()
+    q.add(events[0])
+    print(q)
     sim = Simulation()
-    final_stats = sim.run(events)
-    print(final_stats)
+    # final_stats = sim.run(events)
+    # print(final_stats)
