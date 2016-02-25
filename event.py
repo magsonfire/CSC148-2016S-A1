@@ -252,8 +252,9 @@ class DriverRequest(Event):
         self.driver = driver
 
     def do(self, dispatcher, monitor):
-        """Register the driver, if this is the first request, and
-        assign a rider to the driver, if one is available.
+        """Assign a rider to the driver, if one is available, and add the driver
+        to the fleet if they are new. If a rider is assigned to the driver, the
+        driver starts driving to the rider.
 
         If a rider is available, return a Pickup event.
 
@@ -267,14 +268,15 @@ class DriverRequest(Event):
                        self.driver.location)
 
         events = []
-        # Request a rider from the dispatcher.
+        # Request a rider from the dispatcher, and register driver if new.
         rider = dispatcher.request_rider(self.driver)
         # If there is one available, the driver starts driving towards the
         # rider, and the method returns a Pickup event for when the driver
         # arrives at the riders location.
         if rider is not None:
             travel_time = self.driver.start_drive(rider.origin)
-            events.append(Pickup(self.timestamp + travel_time, rider, self.driver))
+            events.append(Pickup(self.timestamp + travel_time, rider, \
+                                 self.driver))
         return events
 
     def __str__(self):
@@ -303,14 +305,14 @@ class Cancellation(Event):
         """
         super().__init__(timestamp, rider)
         self.rider = rider
+        
     def __str__(self):
         """Return a string representation of this Event
         
         @Type self: Pickup
         @rType: str
         """
-        return '{} - {} = {}: Cancellation'.format(self.timestamp,self.rider,
-                                                   self.driver)
+        return '{} -- {}: Cancellation'.format(self.timestamp, self.rider)
         
     def do(self, dispatcher, monitor):
         #Is the request cancelled when the status is changed? or do I have to cancel it another way 
@@ -322,19 +324,17 @@ class Cancellation(Event):
         @type self: Cancellation
         @type dispatcher: Dispatcher
         @type monitor: Monitor
-        @rtype: None
+        @rtype: list
         """
-        if self.rider.status == SATISFIED:
-            pass
-        else:
-            monitor.notify(self.timestamp, RIDER, CANCEL,
+        monitor.notify(self.timestamp, RIDER, CANCEL,
                        self.rider.id, self.rider.origin)
-            self.rider.status = CANCELLED
-            dispatcher.cancel_ride(self.rider)
-
-       #Do this when brain functions
-       #Brain is now functioning. I am doing this
-       
+        
+        dispatcher.cancel_ride(self.rider)
+        self.rider.status = CANCELLED
+        for i in range(len(dispatcher._waitlist) - 1):
+            if rider.id == self.rider.id:
+                dispatcher.waitlist.remove(i)
+        return []
        
 class Pickup(Event):
     # Use Driver.start_drive(Rider.origin) to start pickup event
@@ -388,10 +388,13 @@ class Pickup(Event):
         
         self.driver.end_drive()
         events = []
+        
         if self.rider._status == WAITING:
-            monitor.notify(self.timestamp, RIDER, PICKUP, self.rider.id,self.rider.origion)
+            monitor.notify(self.timestamp, RIDER, PICKUP, self.rider.id,
+                           self.rider.origion)
             travel_time = self.driver.start_ride(self.rider)
-            events.append(Dropoff(self.timestamp + travel_time, self.rider,self.driver))
+            events.append(Dropoff(self.timestamp + travel_time, 
+                                  self.rider,self.driver))
             self.rider.status = SATISFIED
             
         if self.rider._status == CANCELLED:
@@ -419,6 +422,8 @@ class Dropoff(Event):
         """
 
         super().__init__(timestamp)
+        self.rider = rider
+        self.driver = driver
         
     def do(self, dispatcher, monitor):
         """Change the driver's status to idle.
@@ -430,7 +435,14 @@ class Dropoff(Event):
         @type monitor: Monitor
         @rtype: list[Event]
         """
-        pass
+        monitor.notify(self.timestamp, DRIVER, DROPOFF,
+                               self.driver.id, self.rider.destination)   
+        monitor.notify(self.timestamp, RIDER, DROPOFF,
+                                      self.rider.id, self.rider.destination)    
+        
+        self.is_idle = True
+        
+        end_ride(
 #Notify both rider and driver in monitor
 
     #Hello
