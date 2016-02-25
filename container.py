@@ -117,21 +117,9 @@ class PriorityQueue(Container):
         >>> pq._items
         ['blue', 'green', 'red', 'yellow']
         """
-        if self.is_empty:
-            self._items.append(item)
-        
-        #Sort through Queue and insert item 
-        else:
-            i = 0
-            while i < len(self._items) and self._items[i] <= item:
-                i += 1
-                
-            self._items.insert(i, item)
-        
-        
+        self._items.append()
+        self._items.sort()
 
-#Get rid of this   
-#legit copied and pasted. Note to me, look over
 class Queue(Container):
     """
     A first-in, first-out (FIFO) queue.
@@ -144,7 +132,7 @@ class Queue(Container):
         @param Queue self: this queue
         @rtype: None
         """
-        self._data = []
+        self._items = []
 
     def add(self, obj):
         """
@@ -154,7 +142,7 @@ class Queue(Container):
         @param object obj: object to add
         @rtype: None
         """
-        self._data.append(obj)
+        self._items.append(obj)
 
     def remove(self):
         """
@@ -171,7 +159,7 @@ class Queue(Container):
         >>> q.remove()
         3
         """
-        return self._data.pop(0)
+        return self._items.pop(0)
 
     def is_empty(self):
         """
@@ -190,5 +178,3 @@ class Queue(Container):
         True
         """
         return self._data == []
-
-    
