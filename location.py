@@ -66,3 +66,8 @@ def deserialize_location(location_str):
     row, col = int(attributes[0]), int(attributes[1])
 
     return Location(row, col)
+#I dont get this?
+
+
+    row, col = location_str.split(',')
+    return Location (int(row), int(col))

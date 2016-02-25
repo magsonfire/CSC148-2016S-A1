@@ -148,6 +148,7 @@ class Monitor:
         return wait_time / count
 
     def _average_total_distance(self):
+        
         """Return the average distance drivers have driven.
 
         @type self: Monitor
@@ -192,6 +193,7 @@ class Monitor:
         # Scan through activities list of given driver
         for i in range(len(self._activities[DRIVER][driver]) - 1):
             current = self._activities[DRIVER][driver][i]
+    #I think this is wrong. we need the riders location not the next drivers
             next = self._activities[DRIVER][driver][i + 1]
             # If activity is REQUEST
             if REQUEST in current.description:
@@ -216,6 +218,7 @@ class Monitor:
         # Scan through activities list of given driver
         for i in range(len(self._activities[DRIVER][driver]) - 1):
             current = self._activities[DRIVER][driver][i]
+    #I think this is wrong. we need the riders location not the next drivers
             next = self._activities[DRIVER][driver][i + 1]
             # If activity is PICKUP followed by DROPOFF
             if PICKUP in current.description and DROPOFF in next.description:

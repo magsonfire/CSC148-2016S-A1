@@ -29,8 +29,9 @@ class Driver:
         self.location = location
         self.speed = speed
         self.is_idle = True
-        self.destination = ''
+        self.destination = None
         self._passenger = ''
+#Changed destination to None, not a string
 
     def __str__(self):
         """Return a string representation.
@@ -38,11 +39,13 @@ class Driver:
         @type self: Driver
         @rtype: str
         """
-        return "{} {} {}"\
+        return "{} {} {} {} {} {}"\
             .format(self.id,
                     str(self.location),
-                    str(self.speed))
+                    str(self.speed), str(self.is_dile), str(self.destination), 
+                    str(self._passenger))
 
+#added more, passenger is already a str, is it unnecessary to remake it a str or cautious?
     def __eq__(self, other):
         """Return True if self equals other, and false otherwise.
 
@@ -51,6 +54,10 @@ class Driver:
         """
         return type(self), self.id, self.location, self.speed, self.is_idle == \
                type(other), other.id, other.location, other.speed, other.is_idle
+
+
+
+#Do we need this? will it be sorted? (below)
 
     def __lt__(self, other):
         """Return True if self is less than other, and False otherwise.
@@ -65,8 +72,8 @@ class Driver:
         """Return True if self is less than or equal to other, and False 
         otherwise.
         
-        @type self: Rider
-        @type other: Rider
+        @type self: Driver
+        @type other: Driver
         @rtype: bool
         """        
         return self.speed <= other.speed
@@ -74,8 +81,8 @@ class Driver:
     def __gt__(self, other):
         """Return True if self is greater than other, and False otherwise.
         
-        @type self: Rider
-        @type other: Rider
+        @type self: Driver
+        @type other: Driver
         @rtype: bool
         """        
         return self.speed > other.speed
@@ -84,8 +91,8 @@ class Driver:
         """Return True if self is greater than or equal to other, and False 
         otherwise.
         
-        @type self: Rider
-        @type other: Rider
+        @type self: Driver
+        @type other: Driver
         @rtype: bool
         """
         return self.speed >= other.speed
@@ -98,7 +105,8 @@ class Driver:
         @type destination: Location
         @rtype: int
         """
-        return manhattan_distance(self.location, destination) // self.speed
+        return round(manhattan_distance(self.location, destination) / self.speed)
+#woooohooo close one
 
     def start_drive(self, location):
         """Start driving to the location and return the time the drive will take.
@@ -107,6 +115,8 @@ class Driver:
         @type location: Location
         @rtype: int
         """
+#this happens at the same time as dispatcher.request_drive and I made the driver.is_idle false, is that necessary 
+        self.is_idle = False
         self.destination = location
         return get_travel_time(self, location)
         
@@ -130,9 +140,11 @@ class Driver:
         """
         # Learns identity of the rider and destination
         self._passenger = rider.id
+    
+        driver.destination = rider.destination
         # Returns travel_time to rider's desination
         return get_travel_time(rider.destination)
-        
+
     def end_ride(self):
         """End the current ride, and arrive at the rider's destination.
 
@@ -143,4 +155,7 @@ class Driver:
         @rtype: None
         """
         # Set driver location to rider destination
-        Driver.location = Rider.destination
+        self.location = self.destination
+        self.destination = None
+        self.is_idle = True
+        

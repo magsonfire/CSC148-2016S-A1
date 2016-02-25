@@ -263,7 +263,7 @@ class DriverRequest(Event):
         @rtype: list[Event]
         """
         # Notify the monitor about the request.
-        monitor.notify(self.timestamp, DRIVER, REQUEST, self.driver, \
+        monitor.notify(self.timestamp, DRIVER, REQUEST, self.driver.id, \
                        self.driver.location)
 
         events = []
@@ -273,7 +273,7 @@ class DriverRequest(Event):
         # rider, and the method returns a Pickup event for when the driver
         # arrives at the riders location.
         if rider is not None:
-            travel_time = driver.start_drive(rider.origin)
+            travel_time = self.driver.start_drive(rider.origin)
             events.append(Pickup(self.timestamp + travel_time, rider, self.driver))
         return events
 
@@ -301,9 +301,19 @@ class Cancellation(Event):
         @type rider: Rider
         @rtype: None
         """
-        pass
-    
+        super().__init__(timestamp, rider)
+        self.rider = rider
+    def __str__(self):
+        """Return a string representation of this Event
+        
+        @Type self: Pickup
+        @rType: str
+        """
+        return '{} - {} = {}: Cancellation'.format(self.timestamp,self.rider,
+                                                   self.driver)
+        
     def do(self, dispatcher, monitor):
+        #Is the request cancelled when the status is changed? or do I have to cancel it another way 
         """Cancel a rider's request, change the rider's status to CANCELLED,
         and remove the rider from the dispatcher's waitlist.
         
@@ -312,11 +322,20 @@ class Cancellation(Event):
         @type self: Cancellation
         @type dispatcher: Dispatcher
         @type monitor: Monitor
-        @rtype: list[Event]
+        @rtype: None
         """
-        pass
-    
+        if self.rider.status == SATISFIED:
+            pass
+        else:
+            monitor.notify(self.timestamp, RIDER, CANCEL,
+                       self.rider.id, self.rider.origin)
+            self.rider.status = CANCELLED
+            dispatcher.cancel_ride(self.rider)
 
+       #Do this when brain functions
+       #Brain is now functioning. I am doing this
+       
+       
 class Pickup(Event):
     # Use Driver.start_drive(Rider.origin) to start pickup event
     # If driver's travel_time <= rider.patience, pick up success
@@ -337,8 +356,21 @@ class Pickup(Event):
         @type driver: Driver
         @rtype: None
         """
-        pass
 
+        super().__init__(timestamp)
+        self.driver = driver        
+        self.rider = rider
+
+#add __str__
+    def __str__(self):
+        """Return a string representation of this event
+        
+        @type: Pickup
+        @rtype: str
+        """
+        return '{} - {} - {}: Pick up;'.format(self.timestamp,self.rider,
+                                               self.driver)
+    
     def do(self, dispatcher, monitor):
         """Change the rider's status to SATISFIED, and the driver starts
         driving to the rider's destination.
@@ -350,8 +382,24 @@ class Pickup(Event):
         @type monitor: Monitor
         @rtype: list[Event]
         """
-        pass
-
+        #Notify monitor 
+        monitor.notify(self.timestamp, DRIVER, PICKUP,
+                       self.driver.id, self.rider.origin)
+        
+        self.driver.end_drive()
+        events = []
+        if self.rider._status == WAITING:
+            monitor.notify(self.timestamp, RIDER, PICKUP, self.rider.id,self.rider.origion)
+            travel_time = self.driver.start_ride(self.rider)
+            events.append(Dropoff(self.timestamp + travel_time, self.rider,self.driver))
+            self.rider.status = SATISFIED
+            
+        if self.rider._status == CANCELLED:
+            events.append(DriverRequest(self.timestamo,self.driver))
+            
+        return events
+    
+        
 class Dropoff(Event):
     """A driver drops off a rider at their destination.
     
@@ -369,8 +417,9 @@ class Dropoff(Event):
         @type driver: Driver
         @rtype: None
         """
-        pass
 
+        super().__init__(timestamp)
+        
     def do(self, dispatcher, monitor):
         """Change the driver's status to idle.
         
@@ -382,8 +431,10 @@ class Dropoff(Event):
         @rtype: list[Event]
         """
         pass
+#Notify both rider and driver in monitor
 
-
+    #Hello
+    
 def create_event_list(filename):
     """Return a list of Events based on raw list of events in <filename>.
 
