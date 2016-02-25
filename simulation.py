@@ -50,21 +50,21 @@ class Simulation:
             An initial list of events.
         @rtype: dict[str, object]
         """
-        
 
         # Add all initial events to the event queue.
         for item in initial_events:
             self._events.add(item)
         # Until there are no more events, remove an event
         # from the event queue and do it. Add any returned
-           # events to the event queue.        
+        # events to the event queue.
         while not self._events.is_empty:
             event = self._events.remove()
             event_list = event.do(self._dispatcher, self._monitor)
-            if event_list is not None and len(event_list) > 0:
+            # If returned event is not empty
+            if len(event_list) > 0:
+                # Add events back to events
                 for item in event_list:
                     self._events.add(item)
-                    
 
         return self._monitor.report()
 
