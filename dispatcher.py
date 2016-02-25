@@ -1,6 +1,6 @@
 from driver import Driver
 from rider import Rider
-from container import Queue(), PriorityQueue()
+from container import Queue, PriorityQueue
 
 
 class Dispatcher:
@@ -90,7 +90,7 @@ class Dispatcher:
 
     def remove_from_waitlist(self, rider):
         """Remove the rider from the waitlist
-        
+
         @type self: Dispatcher
         @type rider: Rider
         @rtype: None
@@ -100,7 +100,7 @@ class Dispatcher:
             if rider.id == self._waitlist[i].id:
                 # Remove rider
                 dispatcher.waitlist.remove(i)
-                
+
     def cancel_ride(self, rider):
         """Cancel the ride for rider and change their status to CANCELLED.
 
@@ -108,11 +108,11 @@ class Dispatcher:
         @type rider: Rider
         @rtype: None
         """
-        rider.status = CANCELLED                
-                
+        rider.status = CANCELLED
+
     def end_wait(self, rider):
         """End the rider's wait and change their status to SATISFIED.
-        
+
         @type self: Dispatcher
         @type rider: Rider
         @rtype: None
