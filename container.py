@@ -69,6 +69,20 @@ class PriorityQueue(Container):
         """
         self._items = []
 
+    def __str__(self):
+        """Return a string representation.
+
+        @type self: PriorityQueue
+        @rtype str
+
+        >>> pq = PriorityQueue()
+        >>> pq.add(2)
+        >>> pq.add(1)
+        >>> print(pq)
+        [1, 2]
+        """
+        return str(self._items)
+
     def remove(self):
         """Remove and return the next item from this PriorityQueue.
 
@@ -140,6 +154,20 @@ class Queue(Container):
         @rtype: None
         """
         self._items = []
+
+    def __str__(self):
+        """Return a string representation.
+
+        @type self: Queue
+        @rtype str
+
+        >>> q = Queue()
+        >>> q.add(1)
+        >>> q.add(2)
+        >>> print(q)
+        >>> '[2, 1]'
+        """
+        return str(self._items)
 
     def add(self, obj):
         """
