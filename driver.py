@@ -148,4 +148,3 @@ class Driver:
         # Set driver location to rider destination
         self.location = self.destination
         self.destination = None
-        self.is_idle = True
