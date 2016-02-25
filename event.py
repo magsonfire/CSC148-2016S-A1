@@ -476,13 +476,13 @@ def create_event_list(filename):
                 # Create driver from tokens: ID, Location, speed
                 driver = Driver(tokens[2], deserialize_location(tokens[3]),
                                 int(tokens[4]))
-                # Create a DriverRequest event using driver info
+                # Create a DriverRequest event using driver
                 event = DriverRequest(timestamp, driver)
             elif event_type == "RiderRequest":
                 # Create rider from tokens: ID, origin, destination, patience
                 rider = Rider(tokens[2], deserialize_location(tokens[3]),
                               deserialize_location(tokens[4]), int(tokens[5]))
-                # Create RiderRequest event using rider info
+                # Create RiderRequest event using rider
                 event = RiderRequest(timestamp, rider)
 
             events.append(event)
