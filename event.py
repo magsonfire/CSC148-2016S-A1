@@ -387,7 +387,7 @@ class Pickup(Event):
                                   self.rider,self.driver))
             # Remove rider from waitlist and change rider status
             dispatcher.remove_from_waitlist(self.rider)
-            dispatcher.end_wait(rider)
+            dispatcher.end_wait(self.rider)
 
         if self.rider._status == CANCELLED:
             events.append(DriverRequest(self.timestamp, self.driver))
