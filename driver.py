@@ -123,7 +123,8 @@ class Driver:
         self.location = self.destination
 
     def start_ride(self, rider):
-        """Start a ride and return the time the ride will take.
+        """Start a ride and return the time the ride will take. The driver
+        learns the ID of the rider as its passenger.
 
         @type self: Driver
         @type rider: Rider
@@ -137,7 +138,8 @@ class Driver:
         return get_travel_time(rider.destination)
 
     def end_ride(self):
-        """End the current ride, and arrive at the rider's destination.
+        """End the current ride, and arrive at the rider's destination. The 
+        driver loses its passenger and becomes idle again.
 
         Precondition: The driver has a rider.
         Precondition: self.destination is not None.
@@ -145,6 +147,10 @@ class Driver:
         @type self: Driver
         @rtype: None
         """
+        # Sets driver passenger to None
+        self._passenger = None        
         # Set driver location to rider destination
         self.location = self.destination
         self.destination = None
+        # Set the driver to idle again
+        self.is_idle = True
