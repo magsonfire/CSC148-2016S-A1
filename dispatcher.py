@@ -47,18 +47,28 @@ class Dispatcher:
         @type rider: Rider
         @rtype: Driver | None
         """
+        fastest_driver = None
 
-        # Check fleet for idle driver
-        for driver in _fleet:
+        # Set driver to first available one
+        for driver in self._fleet:
             if driver.is_idle:
-    #I added this
-                driver.is_idle = False
-                return driver
-        else:
-            self._waitlist.add(rider)
-            return None
-        # Is there a way to get a driver who's also closer, not just faster?
-        # Fleet is now sorted in order of driver speed
+                # Set idle driver to comparator
+                fastest_driver = driver
+            # Otherwise, no drivers are available
+            else:
+                self._waitlist.add(rider)
+                return None
+
+        # Compare rest of fleet to first idle driver
+        for driver in self._fleet:
+            # If next idle driver is faster than current one
+            if driver.get_travel_time(rider.location)\
+                    < fastest_driver.get_travel_time(rider.location):
+                # Set driver to next one
+                fastest_driver = driver
+
+        fastest_driver.is_idle = False
+        return fastest_driver
 
     def request_rider(self, driver):
         """Return a rider for the driver, or None if no rider is available.
@@ -72,17 +82,11 @@ class Dispatcher:
         # Add driver to fleet if new
         if driver not in self._fleet:
             self._fleet.add(driver)
-
-        # If riders list is not empty, assign a rider
-
+        # If waitlist is not empty, assign a rider
         if not self._waitlist.is_empty:
-            rider = self._waitlist[0]
-            return rider
-
+            return self._waitlist[0]
         else:
             return None
-
-# Waitlist currently sorted by patience
 
     def cancel_ride(self, rider):
         """Cancel the ride for rider.
@@ -91,11 +95,7 @@ class Dispatcher:
         @type rider: Rider
         @rtype: None
         """
-#the rider can cancel if they arent in a waitlist (I think) I should check if they are removed from the waitlist when a driver is assigned or when they are picked up (in Pickup class in event)
-
-#Okay, I will need to remove rider from the waitlist when driver is assigned so that two drivers dont go for the same rider. Do this in Pickup event class
-
         if rider in waitlist:
             self._waitlist.remove(rider)
 
-        rider._set_status(CANCELLED)
+        rider.status = CANCELLED
