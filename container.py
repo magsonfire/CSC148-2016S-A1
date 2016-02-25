@@ -4,6 +4,13 @@ class Container:
     This is an abstract class.  Only child classes should be instantiated.
     """
 
+    def __str__(self):
+        """Return a string representation.
+
+        @type self: Container
+        """
+        raise NotImplementedError("Implemented in a subclass")
+
     def add(self, item):
         """Add <item> to this Container.
 
@@ -61,6 +68,17 @@ class PriorityQueue(Container):
         @rtype: None
         """
         self._items = []
+
+    def __str__(self):
+        """Return a string representation.
+
+        @type self: PriorityQueue
+        """
+        str = '['
+        for item in self._items:
+            str += str(item) + ', '
+        str += ']'
+        return str
 
     def remove(self):
         """Remove and return the next item from this PriorityQueue.
@@ -133,6 +151,17 @@ class Queue(Container):
         @rtype: None
         """
         self._items = []
+
+    def __str__(self):
+        """Return a string representation.
+
+        @type self: Queue
+        """
+        str = '['
+        for item in self._items:
+            str += str(item) + ', '
+        str += ']'
+        return str
 
     def add(self, obj):
         """
