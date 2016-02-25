@@ -29,7 +29,6 @@ class Location:
                self.row == other.row and \
                self.column == other.column
 
-
 def manhattan_distance(origin, destination):
     """Return the Manhattan distance between the origin and the destination.
 
@@ -60,14 +59,5 @@ def deserialize_location(location_str):
     >>> deserialize_location('0,0')
     0,0
     """
-    # Get attributes from location_str
-    attributes = location_str.split(',')
-    # Turn into ints
-    row, col = int(attributes[0]), int(attributes[1])
-
-    return Location(row, col)
-#I dont get this?
-
-
     row, col = location_str.split(',')
-    return Location (int(row), int(col))
+    return Location(int(row), int(col))
