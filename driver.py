@@ -30,8 +30,7 @@ class Driver:
         self.speed = speed
         self.is_idle = True
         self.destination = None
-        self._passenger = ''
-#Changed destination to None, not a string
+        self._passenger = None
 
     def __str__(self):
         """Return a string representation.
@@ -39,13 +38,11 @@ class Driver:
         @type self: Driver
         @rtype: str
         """
-        return "{} {} {} {} {} {}"\
+        return "{} {} {}"\
             .format(self.id,
                     str(self.location),
-                    str(self.speed), str(self.is_dile), str(self.destination), 
-                    str(self._passenger))
+                    str(self.speed))
 
-#added more, passenger is already a str, is it unnecessary to remake it a str or cautious?
     def __eq__(self, other):
         """Return True if self equals other, and false otherwise.
 
@@ -55,48 +52,44 @@ class Driver:
         return type(self), self.id, self.location, self.speed, self.is_idle == \
                type(other), other.id, other.location, other.speed, other.is_idle
 
-
-
-#Do we need this? will it be sorted? (below)
-
     def __lt__(self, other):
         """Return True if self is less than other, and False otherwise.
-        
+
         @type self: Driver
         @type other: Driver
         @rtype: bool
-        """        
+        """
         return self.speed < other.speed
-        
+
     def __le__(self, other):
-        """Return True if self is less than or equal to other, and False 
+        """Return True if self is less than or equal to other, and False
         otherwise.
-        
+
         @type self: Driver
         @type other: Driver
         @rtype: bool
-        """        
+        """
         return self.speed <= other.speed
 
     def __gt__(self, other):
         """Return True if self is greater than other, and False otherwise.
-        
+
         @type self: Driver
         @type other: Driver
         @rtype: bool
-        """        
+        """
         return self.speed > other.speed
 
     def __ge__(self, other):
-        """Return True if self is greater than or equal to other, and False 
+        """Return True if self is greater than or equal to other, and False
         otherwise.
-        
+
         @type self: Driver
         @type other: Driver
         @rtype: bool
         """
         return self.speed >= other.speed
-    
+
     def get_travel_time(self, destination):
         """Return the time it will take to arrive at the destination,
         rounded to the nearest integer.
@@ -106,7 +99,6 @@ class Driver:
         @rtype: int
         """
         return round(manhattan_distance(self.location, destination) / self.speed)
-#woooohooo close one
 
     def start_drive(self, location):
         """Start driving to the location and return the time the drive will take.
@@ -115,11 +107,10 @@ class Driver:
         @type location: Location
         @rtype: int
         """
-#this happens at the same time as dispatcher.request_drive and I made the driver.is_idle false, is that necessary 
         self.is_idle = False
         self.destination = location
         return get_travel_time(self, location)
-        
+
     def end_drive(self):
         """End the drive and arrive at the destination.
 
@@ -140,9 +131,9 @@ class Driver:
         """
         # Learns identity of the rider and destination
         self._passenger = rider.id
-    
-        driver.destination = rider.destination
-        # Returns travel_time to rider's desination
+        self.destination = rider.destination
+
+        # Returns travel_time to rider's destination
         return get_travel_time(rider.destination)
 
     def end_ride(self):
@@ -158,4 +149,3 @@ class Driver:
         self.location = self.destination
         self.destination = None
         self.is_idle = True
-        
