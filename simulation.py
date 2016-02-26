@@ -56,10 +56,9 @@ class Simulation:
         # Until there are no more events, remove an event
         # from the event queue and do it. Add any returned
         # events to the event queue.
-        while not self._events.is_empty:
+        while not self._events.is_empty():
             event = self._events.remove()
             event_list = event.do(self._dispatcher, self._monitor)
-            print(self._monitor)
             # If doing the event returns more events
             if len(event_list) > 0:
                 # Add returned events back to events_list
