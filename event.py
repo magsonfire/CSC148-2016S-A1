@@ -280,7 +280,7 @@ class DriverRequest(Event):
         # If there is one available, the driver starts driving to the rider
         if rider is not None:
             travel_time = self.driver.start_drive(rider.origin)
-            events.append(Pickup(self.timestamp + travel_time, rider, \
+            events.append(Pickup(self.timestamp + travel_time, rider,
                                  self.driver))
         return events
 
@@ -312,8 +312,7 @@ class Cancellation(Event):
         return '{} -- {}: Cancellation'.format(self.timestamp, self.rider)
 
     def do(self, dispatcher, monitor):
-        """Cancel a rider's request, change the rider's status to CANCELLED,
-        and remove the rider from the dispatcher's waitlist.
+        """Cancel a rider's request if the rider is still waiting.
 
         Return an empty event list.
 
@@ -322,12 +321,13 @@ class Cancellation(Event):
         @type monitor: Monitor
         @rtype: list
         """
-        monitor.notify(self.timestamp, RIDER, CANCEL,
-                       self.rider.id, self.rider.origin)
+        if self.rider in dispatcher._waitlist:
+            monitor.notify(self.timestamp, RIDER, CANCEL,
+                           self.rider.id, self.rider.origin)
 
-        dispatcher.cancel_ride(self.rider)
-        dispatcher.remove_from_waitlist(self.rider)
+            dispatcher.cancel_ride(self.rider)
         return []
+
 
 class Pickup(Event):
     """A driver attempts to pick up a rider.
@@ -356,13 +356,13 @@ class Pickup(Event):
         @type: Pickup
         @rtype: str
         """
-        return '{} -- {}: Pick up {}'.format(self.timestamp, self.driver, \
+        return '{} -- {}: Pick up {}'.format(self.timestamp, self.driver,
                                            self.rider)
 
     def do(self, dispatcher, monitor):
-        """End the driver's drive. If the rider is picked up, end the rider's
-        wait, and the driver starts driving to the rider's destination.
-        Otherwise, the rider has cancelled, so the driver requests a new rider.
+        """End the driver's drive. If the rider is picked up, the driver starts
+        driving to the rider's destination. Otherwise, the rider has cancelled,
+        so the driver requests a new rider.
 
         If the rider is picked up, return a Dropoff event. If the rider is not
         picked up, return a RiderRequest event.
@@ -377,17 +377,14 @@ class Pickup(Event):
         events = []
         if self.rider._status == WAITING:
             # Notify monitor of both driver and rider events
-            monitor.notify(self.timestamp, DRIVER, PICKUP, self.driver.id, \
+            monitor.notify(self.timestamp, DRIVER, PICKUP, self.driver.id,
                            self.rider.origin)
             monitor.notify(self.timestamp, RIDER, PICKUP, self.rider.id,
                            self.rider.origin)
             # Calculate travel time for drop-off event
             travel_time = self.driver.start_ride(self.rider)
             events.append(Dropoff(self.timestamp + travel_time,
-                                  self.rider,self.driver))
-            # Remove rider from waitlist and change rider status
-            dispatcher.remove_from_waitlist(self.rider)
-            dispatcher.end_wait(self.rider)
+                                  self.rider, self.driver))
 
         if self.rider._status == CANCELLED:
             events.append(DriverRequest(self.timestamp, self.driver))

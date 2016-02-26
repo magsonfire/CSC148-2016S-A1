@@ -1,3 +1,5 @@
+from location import Location
+
 """
 The rider module contains the Rider class. It also contains
 constants that represent the status of the rider.
@@ -55,6 +57,10 @@ class Rider:
 
         @type self: Rider
         @rtype: str
+
+        >>> r1 = Rider('1', Location(0,0), Location(2,2), 4)
+        >>> print(r1)
+        1
         """
         return '{}'.format(self.id)
 
@@ -64,13 +70,18 @@ class Rider:
         @type self: Rider
         @type other: Rider
         @rtype: bool
+
+        >>> r1 = Rider('1', Location(0,0), Location(2,2), 3)
+        >>> r2 = Rider('1', Location(0,0), Location(2,2), 4)
+        >>> r1 == r2
+        False
         """
-        return type(self) and \
-               self.id and \
-               self.origin and \
-               self.destination, \
-               self.patience, self._status == type(other), other.id, \
-               other.origin, other.destination, other.patience, other._status
+        return type(self) == type(other) and \
+               self.id == other.id and \
+               self.origin == other.origin and \
+               self.destination == other.destination and \
+               self.patience == other.patience and \
+               self._status == other._status
 
     def __lt__(self, other):
         """Return True if self is less than other, and False otherwise.
@@ -78,6 +89,11 @@ class Rider:
         @type self: Rider
         @type other: Rider
         @rtype: bool
+
+        >>> r1 = Rider('1', Location(0,0), Location(2,2), 3)
+        >>> r2 = Rider('1', Location(0,0), Location(2,2), 4)
+        >>> r1 < r2
+        True
         """
         return self.patience < other.patience
 
@@ -88,6 +104,11 @@ class Rider:
         @type self: Rider
         @type other: Rider
         @rtype: bool
+
+        >>> r1 = Rider('1', Location(0,0), Location(2,2), 3)
+        >>> r2 = Rider('1', Location(0,0), Location(2,2), 4)
+        >>> r1 <= r2
+        True
         """
         return self.patience <= other.patience
 
@@ -97,6 +118,11 @@ class Rider:
         @type self: Rider
         @type other: Rider
         @rtype: bool
+
+        >>> r1 = Rider('1', Location(0,0), Location(2,2), 3)
+        >>> r2 = Rider('1', Location(0,0), Location(2,2), 4)
+        >>> r1 > r2
+        False
         """
         return self.patience > other.patience
 
@@ -107,5 +133,10 @@ class Rider:
         @type self: Rider
         @type other: Rider
         @rtype: bool
+
+        >>> r1 = Rider('1', Location(0,0), Location(2,2), 3)
+        >>> r2 = Rider('1', Location(0,0), Location(2,2), 4)
+        >>> r1 >= r2
+        False
         """
         return self.patience >= other.patience

@@ -102,4 +102,6 @@ class Dispatcher:
         @rtype: None
         """
         rider._status = CANCELLED
-        self._waitlist.remove(rider)
+
+        if not self._waitlist.is_empty():
+            self._waitlist.remove(rider)
