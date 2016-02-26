@@ -51,17 +51,16 @@ class Dispatcher:
         fastest_driver = self._fleet[0]
 
         for driver in self._fleet:
-            if not driver.is_idle:
+            while not driver.is_idle:
                 self._waitlist.add(rider)
                 return None
-            else:
-                for i in range(len(self._fleet) - 1):
-                    for j in range(len(self._fleet) - 1):
-                        if self._fleet[i].get_travel_time(rider.origin) \
-                                < self._fleet[j].get_travel_time(rider.origin):
-                            fastest_driver = self._fleet[i]
-                        else:
-                            fastest_driver = self._fleet[j]
+            for i in range(len(self._fleet) - 1):
+                for j in range(len(self._fleet) - 1):
+                    if self._fleet[i].get_travel_time(rider.origin) \
+                            < self._fleet[j].get_travel_time(rider.origin):
+                        fastest_driver = self._fleet[i]
+                    else:
+                        fastest_driver = self._fleet[j]
 
         return fastest_driver
 
@@ -102,6 +101,3 @@ class Dispatcher:
         @rtype: None
         """
         rider._status = CANCELLED
-
-        if not self._waitlist.is_empty():
-            self._waitlist.remove(rider)

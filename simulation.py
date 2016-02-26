@@ -66,6 +66,8 @@ class Simulation:
                 for item in returned:
                     self._events.add(item)
 
+        print(self._monitor._activities)
+
         return self._monitor.report()
 
 

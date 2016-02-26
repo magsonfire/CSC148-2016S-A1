@@ -224,6 +224,8 @@ class RiderRequest(Event):
         monitor.notify(self.timestamp, RIDER, REQUEST,
                        self.rider.id, self.rider.origin)
 
+        print(self)
+
         events = []
         driver = dispatcher.request_driver(self.rider)
         if driver is not None:
@@ -274,6 +276,8 @@ class DriverRequest(Event):
         monitor.notify(self.timestamp, DRIVER, REQUEST, self.driver.id, \
                        self.driver.location)
 
+        print(self)
+
         events = []
         # Request a rider from the dispatcher, and register driver if new.
         rider = dispatcher.request_rider(self.driver)
@@ -321,7 +325,8 @@ class Cancellation(Event):
         @type monitor: Monitor
         @rtype: list
         """
-        if self.rider in dispatcher._waitlist:
+        if self.rider._status == WAITING:
+            print(self)
             monitor.notify(self.timestamp, RIDER, CANCEL,
                            self.rider.id, self.rider.origin)
 
@@ -376,6 +381,7 @@ class Pickup(Event):
 
         events = []
         if self.rider._status == WAITING:
+            print(self)
             # Notify monitor of both driver and rider events
             monitor.notify(self.timestamp, DRIVER, PICKUP, self.driver.id,
                            self.rider.origin)
@@ -383,6 +389,8 @@ class Pickup(Event):
                            self.rider.origin)
             # Calculate travel time for drop-off event
             travel_time = self.driver.start_ride(self.rider)
+            # Change rider status
+            self.rider._status = SATISFIED
             events.append(Dropoff(self.timestamp + travel_time,
                                   self.rider, self.driver))
 
@@ -431,6 +439,7 @@ class Dropoff(Event):
         @type monitor: Monitor
         @rtype: list[Event]
         """
+        print(self)
         # Notify monitor of both driver and rider events
         monitor.notify(self.timestamp, DRIVER, DROPOFF,
                                self.driver.id, self.rider.destination)

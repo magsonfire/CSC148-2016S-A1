@@ -76,8 +76,8 @@ class Rider:
         >>> r1 == r2
         False
         """
-        return type(self) == type(other) and \
-               self.id == other.id and \
+        return type(self) == type(other) \
+               and self.id == other.id and \
                self.origin == other.origin and \
                self.destination == other.destination and \
                self.patience == other.patience and \

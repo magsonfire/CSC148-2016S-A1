@@ -195,7 +195,7 @@ class Queue(Container):
         >>> q.remove()
         3
         """
-        if object:
+        if object != None:
             if object not in self._items:
                 raise NotImplementedError('Item not found')
             self._items.remove(object)
