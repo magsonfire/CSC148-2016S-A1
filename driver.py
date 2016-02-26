@@ -109,8 +109,7 @@ class Driver:
         @rtype: int
         """
         self.destination = location
-        return round(manhattan_distance(self.location, location) /
-                     self.speed)
+        return self.get_travel_time(rider.destination)
 
     def end_drive(self):
         """End the drive and arrive at the destination.
@@ -136,7 +135,7 @@ class Driver:
         self.destination = rider.destination
 
         # Returns travel_time to rider's destination
-        return get_travel_time(rider.destination)
+        return self.get_travel_time(rider.destination)
 
     def end_ride(self):
         """End the current ride, and arrive at the rider's destination. The
