@@ -62,8 +62,8 @@ class Dispatcher:
         # Compare rest of fleet to first idle driver
         for driver in self._fleet._items:
             # If next idle driver is faster than current one
-            if driver.get_travel_time(rider.location)\
-                    < fastest_driver.get_travel_time(rider.location):
+            if driver.get_travel_time(rider.origin)\
+                    < fastest_driver.get_travel_time(rider.origin):
                 # Set driver to next one
                 fastest_driver = driver
 
@@ -89,17 +89,14 @@ class Dispatcher:
             return None
 
     def remove_from_waitlist(self, rider):
-        """Remove the rider from the waitlist
+        """Remove the rider from the waitlist.
 
         @type self: Dispatcher
         @type rider: Rider
         @rtype: None
         """
-        # Find index of rider to remove
-        for i in range(len(self._waitlist._items) - 1):
-            if rider.id == self._waitlist[i].id:
-                # Remove rider
-                dispatcher.waitlist.remove(i)
+        # (Method kept separate from cancel & end_wait for future adaptability.)
+        self._waitlist.remove(rider)
 
     def cancel_ride(self, rider):
         """Cancel the ride for rider and change their status to CANCELLED.
