@@ -300,7 +300,7 @@ class Cancellation(Event):
         @type rider: Rider
         @rtype: None
         """
-        super().__init__(timestamp, rider)
+        super().__init__(timestamp)
         self.rider = rider
 
     def __str__(self):
