@@ -72,4 +72,5 @@ if __name__ == "__main__":
     events = create_event_list("events.txt")
     sim = Simulation()
     final_stats = sim.run(events)
+    print(sim._monitor)
     print(final_stats)

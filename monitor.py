@@ -64,6 +64,14 @@ class Activity:
         self.id = identifier
         self.location = location
 
+    def __str__(self):
+        """Return a string representation of self.
+
+        @type self: Activity
+        @rtype: str
+        """
+        return '{} - {} {} {}'.format(str(self.time), self.description, self.id,
+                                          str(self.location))
 
 class Monitor:
     """A monitor keeps a record of activities that it is notified about.

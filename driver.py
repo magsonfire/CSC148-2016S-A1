@@ -38,10 +38,7 @@ class Driver:
         @type self: Driver
         @rtype: str
         """
-        return "{} {} {}"\
-            .format(self.id,
-                    str(self.location),
-                    str(self.speed))
+        return "{}".format(self.id)
 
     def __eq__(self, other):
         """Return True if self equals other, and false otherwise.

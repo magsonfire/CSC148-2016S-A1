@@ -56,11 +56,7 @@ class Rider:
         @type self: Rider
         @rtype: str
         """
-        return '{} {} {} {}'\
-            .format(self.id,
-                    str(self.origin),
-                    str(self.destination),
-                    str(self.patience))
+        return '{}'.format(self.id)
 
     def __eq__(self, other):
         """Return True if self equals other, and False otherwise.
