@@ -23,7 +23,7 @@ class Dispatcher:
         """Initialize a Dispatcher.
 
         @type self: Dispatcher
-        @type _riders: Queue of Rider
+        @type _waitlist: Queue of Rider
         @type _fleet: PriorityQueue of Driver
         @rtype: None
         """
@@ -50,7 +50,7 @@ class Dispatcher:
         fastest_driver = None
 
         # Set driver to first available one
-        for driver in self._fleet:
+        for driver in self._fleet._items:
             if driver.is_idle:
                 # Set idle driver to comparator
                 fastest_driver = driver
@@ -60,7 +60,7 @@ class Dispatcher:
                 return None
 
         # Compare rest of fleet to first idle driver
-        for driver in self._fleet:
+        for driver in self._fleet._items:
             # If next idle driver is faster than current one
             if driver.get_travel_time(rider.location)\
                     < fastest_driver.get_travel_time(rider.location):
@@ -80,7 +80,7 @@ class Dispatcher:
         @rtype: Rider | None
         """
         # Add driver to fleet if new
-        if driver not in self._fleet:
+        if driver not in self._fleet._items:
             self._fleet.add(driver)
         # If waitlist is not empty, assign a rider
         if not self._waitlist.is_empty:
@@ -96,7 +96,7 @@ class Dispatcher:
         @rtype: None
         """
         # Find index of rider to remove
-        for i in range(len(self._waitlist) - 1):
+        for i in range(len(self._waitlist._items) - 1):
             if rider.id == self._waitlist[i].id:
                 # Remove rider
                 dispatcher.waitlist.remove(i)
