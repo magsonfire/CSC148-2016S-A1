@@ -139,18 +139,19 @@ class Monitor:
         count = 0
 
         # Iterate through activities list of each rider
-        for i in range(len(self._activities[RIDER]) - 1):
+        for rider in self._activities[RIDER]:
             # Add to total waiting riders (all riders will wait - they are
             # created at the time of requesting a ride)
             count += 1
             # For each activity in the rider's list
-            for j in range(len(self._activities[RIDER][i])):
+            for i in range(len(self._activities[RIDER][rider]) - 1):
                 # Find REQUEST event
-                if self._activities[RIDER][i][j].description == REQUEST:
+                if self._activities[RIDER][rider][i].description == REQUEST:
                     # Wait time is time between REQUEST and next event
                     # (PICKUP, CANCEL, and DROPOFF are not followed by waiting)
-                    wait_time += self._activities[RIDER][i][j + 1].time - \
-                           self._activities[RIDER][i][j].time
+                    wait_time += self._activities[RIDER][rider][i + 1].time - \
+                           self._activities[RIDER][rider][i].time
+
         if count != 0:
             return wait_time / count
         else:
