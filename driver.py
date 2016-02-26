@@ -109,7 +109,7 @@ class Driver:
         @rtype: int
         """
         self.destination = location
-        return self.get_travel_time(rider.destination)
+        return self.get_travel_time(self.destination)
 
     def end_drive(self):
         """End the drive and arrive at the destination.

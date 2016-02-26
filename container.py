@@ -181,8 +181,7 @@ class Queue(Container):
 
     def remove(self, object=None):
         """
-        Remove and return object at index i. If no index is provided, remove
-        and return the first object.
+        Remove and return object at index i. If Queue is empty, do nothing.
 
         Queue self must not be empty.
 
@@ -195,10 +194,11 @@ class Queue(Container):
         >>> q.remove()
         3
         """
-        if object != None:
+        if not object:
             if object not in self._items:
                 raise NotImplementedError('Item not found')
             self._items.remove(object)
+
         return self._items.pop(0)
 
     def is_empty(self):

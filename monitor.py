@@ -1,5 +1,5 @@
 from location import Location
-from driver import Driver
+from driver import Driver, manhattan_distance
 from rider import Rider
 
 """
@@ -168,12 +168,12 @@ class Monitor:
         count = 1
 
         # Iterate through activities list of each driver
-        for i in range(len(self._activities[DRIVER]) - 1):
+        for driver in range(len(self._activities[DRIVER]) - 1):
             # Add driver to total count
             count += 1
             # Find each driver's total distance
-            total_dist += get_riderless_distance(self._activities[DRIVER]) + \
-                get_ride_distance(self._activities[DRIVER])
+            total_dist += self.get_riderless_distance(driver) \
+                          + self.get_ride_distance(driver)
 
         if count != 0:
             return total_dist / count
@@ -190,11 +190,11 @@ class Monitor:
         count = 0
 
         # Iterate through activities of drivers
-        for i in range(len(self._activities[DRIVER]) - 1):
+        for driver in self._activities[DRIVER]:
             # Add driver to total count
             count += 1
             # Get driver's total ride distance
-            total_dist += get_ride_distance(self._activities[DRIVER][i])
+            total_dist += self.get_ride_distance(driver)
 
         if count != 0:
             return total_dist / count
@@ -210,15 +210,16 @@ class Monitor:
         """
         total_dist = 0
 
-        # Scan through activities list of given driver
-        for i in range(len(self._activities[DRIVER][driver]) - 1):
-            current = self._activities[DRIVER][driver][i]
-            next = self._activities[DRIVER][driver][i + 1]
-            # If activity is REQUEST
-            if REQUEST in current.description:
-                # Add distance between activity and next activity to total
-                dist = manhattan_distance(current.location, next.location)
-                total_dist += dist
+        for driver in self._activities[DRIVER]:
+            # Scan through activities list
+            for i in range(len(self._activities[DRIVER][driver]) - 2):
+                current = self._activities[DRIVER][driver][i]
+                next = self._activities[DRIVER][driver][i + 1]
+                # If activity is REQUEST
+                if REQUEST in current.description:
+                    # Add distance between activity and next activity to total
+                    total_dist += manhattan_distance(current.location,
+                                                     next.location)
 
         # Return total riderless distance
         return total_dist
@@ -232,15 +233,16 @@ class Monitor:
         """
         total_dist = 0
 
-        # Scan through activities list of given driver
-        for i in range(len(self._activities[DRIVER][driver]) - 1):
-            current = self._activities[DRIVER][driver][i]
-            next = self._activities[DRIVER][driver][i + 1]
-            # If activity is PICKUP followed by DROPOFF
-            if PICKUP in current.description and DROPOFF in next.description:
-            # Add distance between activity and next activity to total
-                dist = manhattan_distance(current.location, next.location)
-                total_dist += dist
+        for driver in self._activities[DRIVER]:
+            # Scan through activities list
+            for i in range(len(self._activities[DRIVER][driver]) - 1):
+                current = self._activities[DRIVER][driver][i]
+                next = self._activities[DRIVER][driver][i + 1]
+                # If activity is PICKUP followed by DROPOFF
+                if PICKUP in current.description and DROPOFF in next.description:
+                # Add distance between activity and next activity to total
+                    dist = manhattan_distance(current.location, next.location)
+                    total_dist += dist
 
         # Return total distance with rider
         return total_dist

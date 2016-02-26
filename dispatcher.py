@@ -1,5 +1,5 @@
 from driver import Driver
-from rider import Rider
+from rider import Rider, WAITING, CANCELLED, SATISFIED
 from container import Queue, PriorityQueue
 
 
@@ -89,13 +89,16 @@ class Dispatcher:
             return None
 
     def remove_from_waitlist(self, rider):
-        """Remove the rider from the waitlist.
+        """Remove the rider from the waitlist. If the waitlist is already
+        empty, do nothing.
 
         @type self: Dispatcher
         @type rider: Rider
         @rtype: None
         """
         # (Method kept separate from cancel & end_wait for future adaptability.)
+        if self._waitlist.is_empty():
+            return None
         self._waitlist.remove(rider)
 
     def cancel_ride(self, rider):
@@ -105,7 +108,7 @@ class Dispatcher:
         @type rider: Rider
         @rtype: None
         """
-        rider.status = CANCELLED
+        rider._status = CANCELLED
 
     def end_wait(self, rider):
         """End the rider's wait and change their status to SATISFIED.
@@ -114,4 +117,4 @@ class Dispatcher:
         @type rider: Rider
         @rtype: None
         """
-        rider.status = SATISFIED
+        rider._status = SATISFIED

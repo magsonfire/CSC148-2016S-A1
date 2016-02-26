@@ -442,7 +442,7 @@ class Dropoff(Event):
 
         events = []
         self.driver.end_ride()
-        events.append(DriverRequest(self.timestamp + self.driver))
+        events.append(DriverRequest(self.timestamp, self.driver))
         return events
 
 def create_event_list(filename):

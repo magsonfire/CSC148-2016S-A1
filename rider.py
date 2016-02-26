@@ -70,9 +70,9 @@ class Rider:
         @rtype: bool
         """
         return type(self), self.id, self.origin, \
-               self.destination, self.patience, self.status == \
+               self.destination, self.patience, self._status == \
                type(other), other.id, other.origin, \
-               other.destination, other.patience, other.status
+               other.destination, other.patience, other._status
 
     def __lt__(self, other):
         """Return True if self is less than other, and False otherwise.
