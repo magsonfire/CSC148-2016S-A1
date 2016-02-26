@@ -1,6 +1,7 @@
 from driver import Driver
 from rider import Rider, WAITING, CANCELLED, SATISFIED
 from container import Queue, PriorityQueue
+from location import Location
 
 
 class Dispatcher:
@@ -28,15 +29,7 @@ class Dispatcher:
         @rtype: None
         """
         self._waitlist = Queue()
-        self._fleet = PriorityQueue()
-
-    def __str__(self):
-        """Return a string representation.
-
-        @type self: Dispatcher
-        @rtype: str
-        """
-        return '{} {}'.format(str(self._riders), str(self._fleet))
+        self._fleet = []
 
     def request_driver(self, rider):
         """Return a driver for the rider, or None if no driver is available.
@@ -46,28 +39,30 @@ class Dispatcher:
         @type self: Dispatcher
         @type rider: Rider
         @rtype: Driver | None
-        """
-        fastest_driver = None
 
-        # Set driver to first available one
-        for driver in self._fleet._items:
-            if driver.is_idle:
-                # Set idle driver to comparator
-                fastest_driver = driver
-            # Otherwise, no drivers are available
-            else:
+        >>> d = Dispatcher()
+        >>> d1 = Driver('a', Location(9,0), 1)
+        >>> d2 = Driver('b', Location(0,0), 1)
+        >>> d._fleet = [d1, d2]
+        >>> r1 = Rider('a', Location(0,0), Location(1,0), 3)
+        >>> print(d.request_driver(r1))
+        a
+        """
+        fastest_driver = self._fleet[0]
+
+        for driver in self._fleet:
+            if not driver.is_idle:
                 self._waitlist.add(rider)
                 return None
+            else:
+                for i in range(len(self._fleet) - 1):
+                    for j in range(len(self._fleet) - 1):
+                        if self._fleet[i].get_travel_time(rider.origin) \
+                                < self._fleet[j].get_travel_time(rider.origin):
+                            fastest_driver = self._fleet[i]
+                        else:
+                            fastest_driver = self._fleet[j]
 
-        # Compare rest of fleet to first idle driver
-        for driver in self._fleet._items:
-            # If next idle driver is faster than current one
-            if driver.get_travel_time(rider.origin)\
-                    < fastest_driver.get_travel_time(rider.origin):
-                # Set driver to next one
-                fastest_driver = driver
-
-        fastest_driver.is_idle = False
         return fastest_driver
 
     def request_rider(self, driver):
@@ -78,28 +73,26 @@ class Dispatcher:
         @type self: Dispatcher
         @type driver: Driver
         @rtype: Rider | None
+
+        >>> d = Dispatcher()
+        >>> r1 = Rider('a', Location(0,0), Location(1,0), 3)
+        >>> d._waitlist = Queue()
+        >>> d._waitlist.add(r1)
+        >>> d1 = Driver('a', Location(0,0), 1)
+        >>> d2 = Driver('b', Location(0,0), 1)
+        >>> d._fleet = [d1]
+        >>> print(d.request_rider(d2))
+        a
+        >>> print(d._fleet)
         """
-        # Add driver to fleet if new
-        if driver not in self._fleet._items:
-            self._fleet.add(driver)
+        if driver not in self._fleet:
+            self._fleet.append(driver)
+
         # If waitlist is not empty, assign a rider
-        if not self._waitlist.is_empty:
-            return self._waitlist[0]
+        if not self._waitlist.is_empty():
+            return self._waitlist.remove()
         else:
             return None
-
-    def remove_from_waitlist(self, rider):
-        """Remove the rider from the waitlist. If the waitlist is already
-        empty, do nothing.
-
-        @type self: Dispatcher
-        @type rider: Rider
-        @rtype: None
-        """
-        # (Method kept separate from cancel & end_wait for future adaptability.)
-        if self._waitlist.is_empty():
-            return None
-        self._waitlist.remove(rider)
 
     def cancel_ride(self, rider):
         """Cancel the ride for rider and change their status to CANCELLED.
@@ -109,12 +102,4 @@ class Dispatcher:
         @rtype: None
         """
         rider._status = CANCELLED
-
-    def end_wait(self, rider):
-        """End the rider's wait and change their status to SATISFIED.
-
-        @type self: Dispatcher
-        @type rider: Rider
-        @rtype: None
-        """
-        rider._status = SATISFIED
+        self._waitlist.remove(rider)

@@ -57,10 +57,15 @@ class Simulation:
         # Until there are no more events, remove an event
         # from the event queue and do it. Add any returned
         # events to the event queue.
+        print(self._dispatcher._waitlist)
+        print(self._dispatcher)
         while not self._events.is_empty():
             event = self._events.remove()
             print(event)
             returned = event.do(self._dispatcher, self._monitor)
+            print(self._dispatcher._waitlist) #Waitlist
+            print(self._dispatcher._fleet) #Fleet
+            print(self._dispatcher._fleet[-1].id) #First driver
             # If doing the event returns more events
             if len(returned) > 0:
                 # Add returned events back to event queue

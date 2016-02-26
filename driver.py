@@ -46,8 +46,11 @@ class Driver:
         @type self: Driver
         @rtype: bool
         """
-        return type(self), self.id, self.location, self.speed, self.is_idle == \
-               type(other), other.id, other.location, other.speed, other.is_idle
+        return type(self) == type(other) and \
+               self.id == other.id and \
+               self.location == other.location and \
+               self.speed == other.speed and \
+               self.is_idle == other.is_idle
 
     def __lt__(self, other):
         """Return True if self is less than other, and False otherwise.
@@ -130,6 +133,7 @@ class Driver:
         # Learns identity of the rider and destination
         self._passenger = rider.id
         self.destination = rider.destination
+        self.is_idle = False
 
         # Returns travel_time to rider's destination
         return self.get_travel_time(rider.destination)
